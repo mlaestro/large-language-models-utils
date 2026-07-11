@@ -16,7 +16,7 @@ class FileReader:
 
     def get_full_text(self) -> str:
         if not os.path.exists(self.dir_path):
-            raise FileNotFoundError("Directory does not exist")
+            raise FileNotFoundError(f"Directory {self.dir_path} does not exist")
         full_path = os.path.join(self.dir_path, self.file_path)
         if not os.path.exists(full_path):
             raise FileNotFoundError("File does not exist")
@@ -24,26 +24,28 @@ class FileReader:
             with open(full_path, encoding=self.encoding) as f:
                 text = f.read()
             return text
-        except FileNotFoundError:
-            raise FileNotFoundError("File does not exist")
         except UnicodeDecodeError:
-            raise UnicodeDecodeError("File does not contain utf-8")
+            raise UnicodeDecodeError(f"File {self.file_path} does not contain utf-8")
         finally:
             f.close()
 
-    def __iter__(self):
+    def get_single_line(self):
         """
 
-        :return: Returns one sentence at a time
+        :return:
         """
-        try:
-            with open(self.file_path, encoding=self.encoding) as f:
-                text = f.read()
-                yield text
-        except FileNotFoundError:
+
+        if not os.path.exists(self.dir_path):
+            raise FileNotFoundError(f"Directory {self.dir_path} does not exist")
+        full_path = os.path.join(self.dir_path, self.file_path)
+        if not os.path.exists(full_path):
             raise FileNotFoundError("File does not exist")
+        try:
+            with open(full_path, encoding=self.encoding) as f:
+                for line in f:
+                    yield line.strip()
         except UnicodeDecodeError:
-            raise UnicodeDecodeError("File does not contain utf-8")
+            raise UnicodeDecodeError(f"File {self.file_path} does not contain utf-8")
         finally:
             f.close()
 
