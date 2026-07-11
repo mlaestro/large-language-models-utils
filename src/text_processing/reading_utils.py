@@ -26,8 +26,6 @@ class FileReader:
             return text
         except UnicodeDecodeError:
             raise UnicodeDecodeError(f"File {self.file_path} does not contain utf-8")
-        finally:
-            f.close()
 
     def get_single_line(self):
         """
@@ -46,8 +44,6 @@ class FileReader:
                     yield line.strip()
         except UnicodeDecodeError:
             raise UnicodeDecodeError(f"File {self.file_path} does not contain utf-8")
-        finally:
-            f.close()
 
 class WebReader:
     ## TODO: Add utilities for reading directly from web
